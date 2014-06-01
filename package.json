@@ -1,0 +1,19 @@
+{
+  "name": "breadboard",
+  "version": "0.0.0",
+  "description": "Linking NodeJS frameworks together",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/palra/breadboard.git"
+  },
+  "author": "Loïc Payol",
+  "devDependencies": {
+    "mocha": "1.18.0",
+    "should": "3.1.4"
+  },
+  "license": "GPL v3"
+}

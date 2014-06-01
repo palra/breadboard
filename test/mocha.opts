@@ -1,0 +1,6 @@
+--timeout 10000
+--reporter spec
+--ui bdd
+
+test/globalHooks.js
+test/**/*.test.js
