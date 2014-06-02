@@ -11,6 +11,10 @@
     "url": "https://github.com/palra/breadboard.git"
   },
   "author": "Loïc Payol",
+  "dependencies": {
+    "coffee-script": "1.7.1",
+    "lodash": "2.4.1"
+  },
   "devDependencies": {
     "mocha": "1.18.0",
     "should": "3.1.4"
