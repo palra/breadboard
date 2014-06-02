@@ -12,7 +12,6 @@
   },
   "author": "Loïc Payol",
   "dependencies": {
-    "coffee-script": "1.7.1",
     "lodash": "2.4.1"
   },
   "devDependencies": {
