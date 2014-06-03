@@ -1,103 +1,140 @@
 var assert = require("assert");
 
-describe('Components', function () {
+describe('Components', function() {
 
-	var components = {}, bb;
+    var components = {}, bb;
 
-	beforeEach(function() {
-		bb = new Breadboard();
-		components = {
-			foo: Breadboard.Component.new('foo', {
-				method: function() {
-					return 'foo';
-				},
-			}),
-			bar: Breadboard.Component.new('bar', ['foo'], {
-				dependenciesLoaded: function(deps) {
-					this.foo = deps['foo'];
-				},
-				anotherMethod: function() {
-					return 'bar';
-				},
-				useMyDependency: function() {
-					return this.foo.method();
-				}
-			}),
-		}
-	});
+    beforeEach(function() {
+        delete bb;
+        bb = new Breadboard();
+        components = {
+            foo: Breadboard.Component.new({
+                method: function() {
+                    return 'foo';
+                },
+            }),
+            bar: Breadboard.Component.new(['foo'], {
+                dependenciesLoaded: function(deps) {
+                    this.foo = deps['foo'];
+                },
+                anotherMethod: function() {
+                    return 'bar';
+                },
+                useMyDependency: function() {
+                    return this.foo.method();
+                }
+            }),
+        }
+    });
 
-	it('should load components', function() {
-		bb.add(components.foo);
-		bb.components.should.have.property('foo');
+    it('should load components', function() {
+        bb.add('foo', components.foo);
+        bb.components.should.have.property('foo');
 
-		bb.components.foo.method().should.be.eql('foo');
+        bb.components.foo.method().should.be.eql('foo');
 
-		(function(){
-			bb.add({
-				_meta: {
-					name: 'foo'
-				},
-				method: function() {
-					return 'foo';
-				}
-			});
-		}).should.throw(/valid component$/);
+        (function() {
+            bb.add('name', {
+                _meta: {
+                    name: 'foo'
+                },
+                method: function() {
+                    return 'foo';
+                }
+            });
+        }).should.
+        throw (/Not a valid component$/);
 
-		(function(){
-			var fake = Breadboard.Component.new();
-		}).should.throw(/No name/);
-	});
-	
-	it('should unload components', function() {
-		bb.add(components.foo);
-		bb.remove('foo');
+        (function() {
+            var fake = Breadboard.Component.new();
+            bb.add(fake);
+        }).should.
+        throw (/Invalid name/);
+    });
 
-		(function(){
-			bb.remove('bar');
-		}).should.throw(/No component named/);
-	});
+    it('should lazy load components', function() {
+        bb.add('test', function() {
+            return Breadboard.Component.new([], {
+                aMethod: function() {
+                    return 'aMethod';
+                }
+            });
+        });
 
-	it('should list components', function() {
-		bb.add(components.foo);
-		bb.add(components.bar);
+        bb.components.should.not.have.property('test');
+        bb.has('test').should.be.false;
 
-		bb.components.should.have.properties('foo', 'bar');
+        bb.get('test').should.have.property('aMethod');
 
-		bb.get('foo').should.be.eql(components.foo);
-		bb.get('bar').should.be.eql(components.bar);
+    });
 
-		bb.has('notAComponent').should.be.false;
-		(bb.get('notAComponent') === undefined).should.be.true;
+    it('should unload components', function() {
+        bb.add('foo', components.foo);
+        bb.remove('foo');
 
-		(function(){
-			bb.has(['notAValid', 'Component Name']);
-		}).should.throw(/valid component name/);
-	});
+        (function() {
+            bb.remove('bar');
+        }).should.
+        throw (/No component named/);
+    });
 
-	it('should load dependencies', function() {
-		bb.add(components.foo);
-		bb.add(components.bar);
+    it('should list components', function() {
+        bb.add('foo', components.foo);
+        bb.add('bar', components.bar);
 
-		bb.load();
+        bb.components.should.have.properties('foo', 'bar');
 
-		bb.components.bar.useMyDependency().should.be.eql('foo');
-	});
+        bb.get('foo').should.be.eql(components.foo);
+        bb.get('bar').should.be.eql(components.bar);
 
-	it('should not load non existing dependencies', function() {
-		(function(){
-			bb.add(Breadboard.Component.new('baz', ['lololol']));
-			bb.load();
-		}).should.throw(/lololol/);
-	});
+        bb.has('notAComponent').should.be.false;
+        (bb.get('notAComponent') === undefined).should.be.true;
 
-	it('should not inject yourself to your dependencies', function(){
-		(function(){
-			var baz = Breadboard.Component.new('baz', ['bar', 'baz'], {
-				againAnotherMethod: function() {
-					return 'baz';
-				}
-			});
-		}).should.throw(/can't add yourself as a dependency/);
-	});
-		
+        (function() {
+            bb.has(['notAValid', 'Component Name']);
+        }).should.
+        throw (/valid component name/);
+
+        (function() {
+            bb.get({
+                notAValid: 'Component Name'
+            });
+        }).should.
+        throw (/valid component name/);
+    });
+
+    it('should load dependencies', function() {
+        bb.add('foo', components.foo);
+        bb.add('bar', components.bar);
+
+        bb.load();
+
+        bb.components.bar.useMyDependency().should.be.eql('foo');
+    });
+
+    it('should not overwrite components');
+
+    it('should not load non existing dependencies', function() {
+        (function() {
+            bb.add('baz', Breadboard.Component.new(['lololol']));
+            bb.load();
+        }).should.
+        throw (/lololol/);
+    });
+
+    it('should not inject yourself to your dependencies', function() {
+        (function() {
+            var baz = Breadboard.Component.new(['bar', 'baz'], {
+                againAnotherMethod: function() {
+                    return 'baz';
+                }
+            });
+            bb.add('bar', components.bar);
+            bb.add('foo', components.foo);
+            bb.add('baz', baz);
+            bb.load();
+        }).should.
+        throw (/Can't add yourself as a dependency/);
+    });
+
 });
