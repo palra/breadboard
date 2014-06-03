@@ -112,8 +112,6 @@ describe('Components', function() {
         bb.components.bar.useMyDependency().should.be.eql('foo');
     });
 
-    it('should not overwrite components');
-
     it('should not load non existing dependencies', function() {
         (function() {
             bb.add('baz', Breadboard.Component.new(['lololol']));
