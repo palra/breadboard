@@ -29,6 +29,9 @@ describe('Components', function() {
 
     it('should load components', function() {
         bb.add('foo', components.foo);
+        bb.components.should.not.have.property('foo');
+
+        bb.load();
         bb.components.should.have.property('foo');
 
         bb.components.foo.method().should.be.eql('foo');
@@ -64,23 +67,39 @@ describe('Components', function() {
         bb.components.should.not.have.property('test');
         bb.has('test').should.be.false;
 
+        (bb.get('test') === undefined).should.be.true;
+
+        bb.load();
         bb.get('test').should.have.property('aMethod');
+
+        (function() {
+            bb.add('anotherTest', function() {
+                return 'Not a component';
+            });
+            bb.load();
+        }).should.
+        throw (/does not return a Component/);
 
     });
 
     it('should unload components', function() {
         bb.add('foo', components.foo);
-        bb.remove('foo');
+        bb.remove('foo').should.be.true;
 
-        (function() {
-            bb.remove('bar');
-        }).should.
-        throw (/No component named/);
+        bb.add('foo', components.foo);
+        bb.load();
+        bb.remove('foo').should.be.true;
+
+        bb.remove('bar').should.be.false;
+
+        bb.remove(['nope']).should.be.false;
     });
 
     it('should list components', function() {
         bb.add('foo', components.foo);
         bb.add('bar', components.bar);
+
+        bb.load();
 
         bb.components.should.have.properties('foo', 'bar');
 
@@ -90,17 +109,10 @@ describe('Components', function() {
         bb.has('notAComponent').should.be.false;
         (bb.get('notAComponent') === undefined).should.be.true;
 
-        (function() {
-            bb.has(['notAValid', 'Component Name']);
-        }).should.
-        throw (/valid component name/);
-
-        (function() {
-            bb.get({
-                notAValid: 'Component Name'
-            });
-        }).should.
-        throw (/valid component name/);
+        bb.has(['notAValid', 'Component Name']).should.be.false;
+        (bb.get({
+            notAValid: 'Component Name'
+        }) === undefined).should.be.true;
     });
 
     it('should load dependencies', function() {
