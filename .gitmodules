@@ -1,4 +1,0 @@
-[submodule "docs"]
-	path = docs
-	url = git@github.com:palra/breadboard.git
-	branch = gh-pages
