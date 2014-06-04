@@ -1,9 +1,0 @@
-{
-    "source": {
-        "include": ["lib"],
-        "exclude": ["test"]
-    },
-    "opts": {
-        "destination": "./docs/"
-    }
-}
