@@ -14,15 +14,14 @@ describe('Components', function() {
                 },
             }),
             bar: Breadboard.Component.new(['foo'], {
-                dependenciesLoaded: function(deps) {
-                    this.foo = deps['foo'];
-                },
                 anotherMethod: function() {
                     return 'bar';
                 },
                 useMyDependency: function() {
                     return this.foo.method();
                 }
+            }).on('dependencies:loaded', function(deps) {
+                this.foo = deps['foo'];
             }),
         }
     });
@@ -116,8 +115,8 @@ describe('Components', function() {
     });
 
     it('should load dependencies', function() {
-        bb.add('foo', components.foo);
         bb.add('bar', components.bar);
+        bb.add('foo', components.foo);
 
         bb.load();
 
