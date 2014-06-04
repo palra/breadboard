@@ -19,7 +19,9 @@
         "mocha-lcov-reporter": "0.0.1",
         "mocha": "1.18.0",
         "should": "3.1.4",
-        "istanbul": "0.2.10"
+        "istanbul": "0.2.10",
+        "require-all": "0.0.8",
+        "express": "4.4.1"
     },
     "license": "GPL v3"
 }
