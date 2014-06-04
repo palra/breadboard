@@ -9,7 +9,7 @@ A lightweight IoC Container for [node](http://nodejs.org/).
 
 ## Why Breadboard ?
 
-In electronics, a breadboard is a construction base for fast prototyping. 
+In electronics, a breadboard is a construction base for fast prototyping. You just plug components on it, and connects them to each other. This is what I wanted to reproduce, a simple IoC container so.
 
 ## Quick start
 
