@@ -4,6 +4,6 @@
         "exclude": ["test"]
     },
     "opts": {
-        "destination": "./docs/"
+        "destination": "./docs/docs/"
     }
 }
