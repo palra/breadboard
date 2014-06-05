@@ -54,6 +54,22 @@ describe('Components', function() {
         throw (/Invalid name/);
     });
 
+    it('should init components', function() {
+        bb.add('foo', Breadboard.Component.new({
+            init: function() {
+                this.initialized = true;
+            },
+            isInitialized: function() {
+                return this.initialized;
+            }
+        }));
+
+        bb.load();
+
+        bb.get('foo').isInitialized().should.be.true;
+
+    });
+
     it('should lazy load components', function() {
         bb.add('test', function() {
             return Breadboard.Component.new([], {
