@@ -37,9 +37,6 @@ describe('Components', function() {
 
         (function() {
             bb.add('name', {
-                _meta: {
-                    name: 'foo'
-                },
                 method: function() {
                     return 'foo';
                 }
